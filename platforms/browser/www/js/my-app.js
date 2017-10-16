@@ -31,17 +31,19 @@ function createBeacon() {
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
 	var logToDom = function (message) {
-	var e = document.createElement('label');
-	e.innerText = message;
-
+	//var e = document.createElement('label');	
+	var e = document.getElementById('result');	
+	e.innerText = message;	
+/*
 	var br = document.createElement('br');
 	var br2 = document.createElement('br');
 	document.body.appendChild(e);
 	document.body.appendChild(br);
 	document.body.appendChild(br2);
 	
-	window.scrollTo(0, window.document.height);
+	window.scrollTo(0, window.document.height);*/
 	};
+	//logToDom('[DOM] didDetermineStateForRegion: ' + "result");
 
 	var delegate = new cordova.plugins.locationManager.Delegate();
 		
@@ -63,10 +65,11 @@ $$(document).on('deviceready', function() {
 		logToDom('[DOM] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
 	};
 
-	var uuid = '00000000-0000-0000-0000-000000000000';
+	//var uuid = '00000000-0000-0000-0000-000000000000';
+	var uuid =   'fda50693-a4e2-4fb1-afcf-c6eb076478';
 	var identifier = 'beaconOnTheMacBooksShelf';
-	var minor = 1000;
-	var major = 5;
+	var minor = 10001;
+	var major = 23366;
 	var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
 
 	cordova.plugins.locationManager.setDelegate(delegate);
