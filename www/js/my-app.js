@@ -52,7 +52,7 @@ $$(document).on('deviceready', function() {
     //    console.log("isEnabled: " + isEnabled);
 		myApp.alert("isEnabled: " + isEnabled);
         if (isEnabled) {
-            cordova.plugins.locationManager.disableBluetooth();
+           // cordova.plugins.locationManager.disableBluetooth();
         } else {
             cordova.plugins.locationManager.enableBluetooth();        
         }
@@ -67,8 +67,8 @@ $$(document).on('deviceready', function() {
 
 	//	logToDom('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
 
-		cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: '
-			+ JSON.stringify(pluginResult));
+	//	cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: '
+	//		+ JSON.stringify(pluginResult));
 			
 		myApp.alert(pluginResult);
 	};
@@ -84,7 +84,7 @@ $$(document).on('deviceready', function() {
 		myApp.alert(pluginResult);
 	};
 
-	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb076478';
+	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825';
 	var identifier = 'beaconOnTheMacBooksShelf';
 	var minor = 10001;
 	var major = 23366;
