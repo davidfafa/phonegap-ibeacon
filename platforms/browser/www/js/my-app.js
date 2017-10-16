@@ -65,23 +65,23 @@ $$(document).on('deviceready', function() {
 	
 	delegate.didDetermineStateForRegion = function (pluginResult) {
 
-	//	logToDom('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
+		logToDom('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
 
-	//	cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: '
-	//		+ JSON.stringify(pluginResult));
+		cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: '
+			+ JSON.stringify(pluginResult));
 			
-		myApp.alert(pluginResult);
+	//	myApp.alert(pluginResult);
 	};
 
 	delegate.didStartMonitoringForRegion = function (pluginResult) {
 		//console.log('didStartMonitoringForRegion:', pluginResult);
-		myApp.alert(pluginResult);
-	//	logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
+	//	myApp.alert(pluginResult);
+		logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
 	};
 
 	delegate.didRangeBeaconsInRegion = function (pluginResult) {
-		//logToDom('[DOM] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
-		myApp.alert(pluginResult);
+		logToDom('[DOM] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
+		//myApp.alert(pluginResult);
 	};
 
 	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825';
