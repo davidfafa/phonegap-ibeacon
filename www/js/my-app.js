@@ -32,25 +32,17 @@ function createBeacon() {
 $$(document).on('deviceready', function() {
   //  console.log("Device is ready!");	
 	var logToDom = function (message) {
-	//var e = document.createElement('label');	
-	var e = document.getElementById('result');	
-	e.innerText = message;	
-/*
-	var br = document.createElement('br');
-	var br2 = document.createElement('br');
-	document.body.appendChild(e);
-	document.body.appendChild(br);
-	document.body.appendChild(br2);
-	
-	window.scrollTo(0, window.document.height);*/
-	};
-	//logToDom('[DOM] didDetermineStateForRegion: ' + "result");
-
+		var node = document.createElement("p");                 // Create a <li> node
+		var textnode = document.createTextNode(message);         // Create a text node
+		node.appendChild(textnode);  		
+		var e = document.getElementById('result');			
+		e.appendChild(node);
+	};	
 	
 	cordova.plugins.locationManager.isBluetoothEnabled()
     .then(function(isEnabled){
-    //    console.log("isEnabled: " + isEnabled);
-		myApp.alert("isEnabled: " + isEnabled);
+        //console.log("isEnabled: " + isEnabled);	
+		logToDom('[DOM] isBluetoothEnabled: ' + isEnabled);		
         if (isEnabled) {
            // cordova.plugins.locationManager.disableBluetooth();
         } else {
@@ -64,28 +56,22 @@ $$(document).on('deviceready', function() {
 	var delegate = new cordova.plugins.locationManager.Delegate();
 	
 	delegate.didDetermineStateForRegion = function (pluginResult) {
-
 		logToDom('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
-
 		cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: '
-			+ JSON.stringify(pluginResult));
-			
-	//	myApp.alert(pluginResult);
+			+ JSON.stringify(pluginResult));		
+	
 	};
 
 	delegate.didStartMonitoringForRegion = function (pluginResult) {
-		//console.log('didStartMonitoringForRegion:', pluginResult);
-	//	myApp.alert(pluginResult);
 		logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
 	};
 
 	delegate.didRangeBeaconsInRegion = function (pluginResult) {
-		logToDom('[DOM] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
-		//myApp.alert(pluginResult);
+		logToDom('[DOM] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));		
 	};
 
 	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825';
-	var identifier = 'beaconOnTheMacBooksShelf';
+	var identifier = 'myiBeacon';
 	var minor = 10001;
 	var major = 23366;
 	var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
@@ -97,7 +83,7 @@ $$(document).on('deviceready', function() {
 	// or cordova.plugins.locationManager.requestAlwaysAuthorization()
 
 	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
-		.fail(function(e) { console.error(e); })
+		.fail(function(e) { console.error(e);logToDom('Error:' + e.message; })
 		.done();	
 	
 });
