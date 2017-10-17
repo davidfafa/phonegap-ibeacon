@@ -32,17 +32,21 @@ function createBeacon() {
 $$(document).on('deviceready', function() {
   //  console.log("Device is ready!");	
 	var logToDom = function (message) {
-		var node = document.createElement("p");                 // Create a <li> node
-		var textnode = document.createTextNode(message);         // Create a text node
-		node.appendChild(textnode);  		
-		var e = document.getElementById('result');			
-		e.appendChild(node);
-	};	
+	//var e = document.createElement('label');	
+	var e = document.getElementById('result');	
+	e.innerText = message;
+/*
+	var br = document.createElement('br');
+	var br2 = document.createElement('br');
+	document.body.appendChild(e);
+	document.body.appendChild(br);
+	document.body.appendChild(br2);
 	
+	window.scrollTo(0, window.document.height);*/
+	};	
 	cordova.plugins.locationManager.isBluetoothEnabled()
     .then(function(isEnabled){
-        //console.log("isEnabled: " + isEnabled);	
-		logToDom('[DOM] isBluetoothEnabled: ' + isEnabled);		
+        console.log("isEnabled: " + isEnabled);	
         if (isEnabled) {
            // cordova.plugins.locationManager.disableBluetooth();
         } else {
@@ -83,7 +87,7 @@ $$(document).on('deviceready', function() {
 	// or cordova.plugins.locationManager.requestAlwaysAuthorization()
 
 	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
-		.fail(function(e) { console.error(e);logToDom('Error:' + e.message; })
+		.fail(function(e) { console.error(e); })
 		.done();	
 	
 });
