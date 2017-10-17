@@ -31,22 +31,18 @@ function createBeacon() {
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
   //  console.log("Device is ready!");	
-	var logToDom = function (message) {
-	//var e = document.createElement('label');	
-	var e = document.getElementById('result');	
-	e.innerText = message;
-/*
-	var br = document.createElement('br');
-	var br2 = document.createElement('br');
-	document.body.appendChild(e);
-	document.body.appendChild(br);
-	document.body.appendChild(br2);
-	
-	window.scrollTo(0, window.document.height);*/
+	var logToDom = function (message) {		
+		//var e = document.getElementById('result');	
+		//e.innerText = message;
+		var node = document.createElement("p");                  // Create a <p> node
+		var textnode = document.createTextNode(message);         // Create a text node
+		node.appendChild(textnode);                              // Append the text to <p>	
+		document.getElementById("result").appendChild(node);     // Append <p> to <div> with id="result" 
 	};	
 	cordova.plugins.locationManager.isBluetoothEnabled()
     .then(function(isEnabled){
-        console.log("isEnabled: " + isEnabled);	
+     //   console.log("isEnabled: " + isEnabled);	
+		logToDom('[DOM] isBluetoothEnabled: ' + isEnabled);
         if (isEnabled) {
            // cordova.plugins.locationManager.disableBluetooth();
         } else {
