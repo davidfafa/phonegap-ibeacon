@@ -16,29 +16,79 @@ var mainView = myApp.addView('.view-main', {
  * @throws Error if the BeaconRegion parameters are not valid.
  */
 function createBeacon() {
-
-    var uuid = '00000000-0000-0000-0000-000000000000'; // mandatory
+//    var uuid = '00000000-0000-0000-0000-000000000000'; // mandatory
+	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825'; // mandatory
     var identifier = 'beaconAtTheMacBooks'; // mandatory
-    var minor = 1000; // optional, defaults to wildcard if left empty
-    var major = 5; // optional, defaults to wildcard if left empty
+    var minor = 10001; // optional, defaults to wildcard if left empty
+    var major = 23366; // optional, defaults to wildcard if left empty
 
     // throws an error if the parameters are not valid
     var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
    
     return beaconRegion;   
 } 
+var eventCnt = 1;
+var isStart = false;
+var logToDom = function (message) {		
+	//var e = document.getElementById('result');	
+	//e.innerText = message;
+	var node = document.createElement("p");                  // Create a <p> node
+	var textnode = document.createTextNode(message);         // Create a text node
+	node.appendChild(textnode);                              // Append the text to <p>	
+	document.getElementById("result").appendChild(node);     // Append <p> to <div> with id="result" 
+};	
+
+var clearLog = function() {
+	document.getElementById("result").innerText='';
+	eventCnt = 1;
+}
+
+function startRanging() {
+	clearLog();
+	var delegate = new cordova.plugins.locationManager.Delegate();
+	
+	delegate.didDetermineStateForRegion = function (pluginResult) {
+		logToDom(eventCnt+'['+eventCnt+'] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
+		//cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
+		eventCnt++;
+	};
+
+	delegate.didStartMonitoringForRegion = function (pluginResult) {
+		logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
+	};
+
+	delegate.didRangeBeaconsInRegion = function (pluginResult) {
+		logToDom('['+eventCnt+'] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
+		eventCnt++;
+	};
+
+	//var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825';
+	//var identifier = 'myiBeacon';
+	//var minor = 10001;
+	//var major = 23366;
+	var beaconRegion = createBeacon();//new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
+
+	cordova.plugins.locationManager.setDelegate(delegate);
+
+	// required in iOS 8+
+	cordova.plugins.locationManager.requestWhenInUseAuthorization(); 
+	// or cordova.plugins.locationManager.requestAlwaysAuthorization()
+
+	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
+		.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);})
+		.done();
+}
+
+function stopRanding() {
+	var beaconRegion = createBeacon();
+	cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
+	.fail(function(e) { console.error(e); })
+	.done();
+}
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
-  //  console.log("Device is ready!");	
-	var logToDom = function (message) {		
-		//var e = document.getElementById('result');	
-		//e.innerText = message;
-		var node = document.createElement("p");                  // Create a <p> node
-		var textnode = document.createTextNode(message);         // Create a text node
-		node.appendChild(textnode);                              // Append the text to <p>	
-		document.getElementById("result").appendChild(node);     // Append <p> to <div> with id="result" 
-	};	
+  //  console.log("Device is ready!");
 	cordova.plugins.locationManager.isBluetoothEnabled()
     .then(function(isEnabled){
      //   console.log("isEnabled: " + isEnabled);	
@@ -52,41 +102,26 @@ $$(document).on('deviceready', function() {
     .fail(function(e) { console.error(e); })
     .done();
 	
-	
-	var delegate = new cordova.plugins.locationManager.Delegate();
-	
-	delegate.didDetermineStateForRegion = function (pluginResult) {
-		logToDom('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
-		cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: '
-			+ JSON.stringify(pluginResult));		
-	
-	};
-
-	delegate.didStartMonitoringForRegion = function (pluginResult) {
-		logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
-	};
-
-	delegate.didRangeBeaconsInRegion = function (pluginResult) {
-		logToDom('[DOM] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));		
-	};
-
-	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825';
-	var identifier = 'myiBeacon';
-	var minor = 10001;
-	var major = 23366;
-	var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
-
-	cordova.plugins.locationManager.setDelegate(delegate);
-
-	// required in iOS 8+
-	cordova.plugins.locationManager.requestWhenInUseAuthorization(); 
-	// or cordova.plugins.locationManager.requestAlwaysAuthorization()
-
-	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
-		.fail(function(e) { console.error(e); })
-		.done();	
-	
 });
+
+$$('.start .button').on('click', function () {
+   if(isStart) {
+		stopRanding();
+		isStart = false;
+		this.innerText = 'Stop Monitor';
+   }
+   else {
+		startRanging(); 		
+		isStart = true;		
+		this.innerText = 'Start Monitor';
+   }
+     
+});
+
+$$('.clear .button').on('click', function () {   
+     clearLog();
+});
+
 
 
 // Now we need to run the code that will be executed only for About page.
