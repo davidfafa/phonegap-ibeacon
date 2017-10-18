@@ -54,8 +54,8 @@ function startMonitoring() {
 	var delegate = new cordova.plugins.locationManager.Delegate();
 	
 	delegate.didDetermineStateForRegion = function (pluginResult) {
-		logToDom(eventCnt+'['+eventCnt+'] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
-		cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
+		logToDom('['+eventCnt+'] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
+	//	cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
 		eventCnt++;
 	};
 
@@ -102,7 +102,7 @@ function startRanging() {
 	var delegate = new cordova.plugins.locationManager.Delegate();
 	
 	delegate.didDetermineStateForRegion = function (pluginResult) {
-		logToDom(eventCnt+'['+eventCnt+'] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
+		logToDom('['+eventCnt+'] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
 		//cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
 		eventCnt++;
 	};
