@@ -37,7 +37,7 @@ var clearLog = function() {
  */
 function createBeacon() {
 //    var uuid = '00000000-0000-0000-0000-000000000000'; // mandatory
-	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825'; // mandatory
+	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647828'; // mandatory
     var identifier = 'myiBeacon'; // mandatory
     var minor = 10001; // optional, defaults to wildcard if left empty
     var major = 23366; // optional, defaults to wildcard if left empty
