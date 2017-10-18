@@ -82,7 +82,7 @@ function startMonitoring() {
 	
 	//Start monitoring a single iBeacon
 	cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
-	.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);} })
+	.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);})
 	.done();
 	
 }
