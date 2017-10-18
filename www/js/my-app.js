@@ -28,7 +28,7 @@ function createBeacon() {
     return beaconRegion;   
 } 
 var eventCnt = 1;
-var isStart = false;
+var isRunning = false;
 var logToDom = function (message) {		
 	//var e = document.getElementById('result');	
 	//e.innerText = message;
@@ -74,14 +74,28 @@ function startRanging() {
 	cordova.plugins.locationManager.requestWhenInUseAuthorization(); 
 	// or cordova.plugins.locationManager.requestAlwaysAuthorization()
 
-	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
-		.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);})
-		.done();
+	//Start ranging a single iBeacon
+	//cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
+	//	.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message);})
+	//	.done();
+	
+	//Start monitoring a single iBeacon
+	cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
+	.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);} })
+	.done();
+	
 }
 
 function stopRanding() {
 	var beaconRegion = createBeacon();
-	cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
+	
+	//Stop ranging a single iBeacon
+	//cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
+	//.fail(function(e) { console.error(e); })
+	//.done();
+	
+	//Stop monitoring a single iBeacon
+	cordova.plugins.locationManager.stopMonitoringForRegion(beaconRegion)
 	.fail(function(e) { console.error(e); })
 	.done();
 }
@@ -105,15 +119,18 @@ $$(document).on('deviceready', function() {
 });
 
 $$('.start .button').on('click', function () {
-   if(isStart) {
+   if(isRunning) {
 		stopRanding();
-		isStart = false;
-		this.innerText = 'Stop Monitor';
+		isRunning = false;
+		this.innerText = 'Start Monitor';
+		this.style.color='blue';
+		myApp.alert("Monitor Stopped!");
    }
    else {
 		startRanging(); 		
-		isStart = true;		
-		this.innerText = 'Start Monitor';
+		isRunning = true;		
+		this.innerText = 'Stop Monitor';
+		this.style.color='red';
    }
      
 });
