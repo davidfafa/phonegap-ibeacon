@@ -10,6 +10,24 @@ var mainView = myApp.addView('.view-main', {
     // Because we want to use dynamic navbar, we need to enable it for this view:
     dynamicNavbar: true
 });
+
+var eventCnt = 1;
+var isRunning = false;
+
+var logToDom = function (message) {		
+	//var e = document.getElementById('result');	
+	//e.innerText = message;
+	var node = document.createElement("p");                  // Create a <p> node
+	var textnode = document.createTextNode(message);         // Create a text node
+	node.appendChild(textnode);                              // Append the text to <p>	
+	document.getElementById("result").appendChild(node);     // Append <p> to <div> with id="result" 
+};	
+
+var clearLog = function() {
+	document.getElementById("result").innerText='';
+	eventCnt = 1;
+}
+
 /**
  * Function that creates a BeaconRegion data transfer object.
  * 
@@ -27,21 +45,7 @@ function createBeacon() {
    
     return beaconRegion;   
 } 
-var eventCnt = 1;
-var isRunning = false;
-var logToDom = function (message) {		
-	//var e = document.getElementById('result');	
-	//e.innerText = message;
-	var node = document.createElement("p");                  // Create a <p> node
-	var textnode = document.createTextNode(message);         // Create a text node
-	node.appendChild(textnode);                              // Append the text to <p>	
-	document.getElementById("result").appendChild(node);     // Append <p> to <div> with id="result" 
-};	
 
-var clearLog = function() {
-	document.getElementById("result").innerText='';
-	eventCnt = 1;
-}
 
 function startRanging() {
 	clearLog();
@@ -75,14 +79,14 @@ function startRanging() {
 	// or cordova.plugins.locationManager.requestAlwaysAuthorization()
 
 	//Start ranging a single iBeacon
-	//cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
-	//	.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message);})
-	//	.done();
+	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
+		.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message);})
+		.done();
 	
 	//Start monitoring a single iBeacon
-	cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
-	.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);} })
-	.done();
+	//cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
+	//.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);} })
+	//.done();
 	
 }
 
@@ -90,14 +94,14 @@ function stopRanding() {
 	var beaconRegion = createBeacon();
 	
 	//Stop ranging a single iBeacon
-	//cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
-	//.fail(function(e) { console.error(e); })
-	//.done();
-	
-	//Stop monitoring a single iBeacon
-	cordova.plugins.locationManager.stopMonitoringForRegion(beaconRegion)
+	cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
 	.fail(function(e) { console.error(e); })
 	.done();
+	
+	//Stop monitoring a single iBeacon
+	//cordova.plugins.locationManager.stopMonitoringForRegion(beaconRegion)
+	//.fail(function(e) { console.error(e); })
+	//.done();
 }
 
 // Handle Cordova Device Ready Event
