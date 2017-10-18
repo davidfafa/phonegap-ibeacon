@@ -39,8 +39,8 @@ function createBeacon() {
 //    var uuid = '00000000-0000-0000-0000-000000000000'; // mandatory
 	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825'; // mandatory
     var identifier = 'myiBeacon'; // mandatory
-    var minor = ''; // optional, defaults to wildcard if left empty
-    var major = ''; // optional, defaults to wildcard if left empty
+    var minor = 10001; // optional, defaults to wildcard if left empty
+    var major = 23366; // optional, defaults to wildcard if left empty
 
     // throws an error if the parameters are not valid
     var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
@@ -62,7 +62,16 @@ function startMonitoring() {
 	delegate.didStartMonitoringForRegion = function (pluginResult) {
 		logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
 	};
-
+	
+	delegate.didEnterRegion = function (pluginResult) {
+		logToDom('['+eventCnt+']didEnterRegion:' + JSON.stringify(pluginResult));
+		eventCnt++;
+	};
+	
+	delegate.didExitRegion = function (pluginResult) {
+		logToDom('['+eventCnt+']didExitRegion:' + JSON.stringify(pluginResult));
+		eventCnt++;
+	};
 	delegate.didRangeBeaconsInRegion = function (pluginResult) {
 		logToDom('['+eventCnt+'] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
 		eventCnt++;
