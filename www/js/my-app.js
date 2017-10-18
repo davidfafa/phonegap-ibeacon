@@ -12,7 +12,9 @@ var mainView = myApp.addView('.view-main', {
 });
 
 var eventCnt = 1;
-var isRunning = false;
+var isMonitorRunning = false;
+var isRangeRunning = false;
+
 
 var logToDom = function (message) {		
 	//var e = document.getElementById('result');	
@@ -46,7 +48,55 @@ function createBeacon() {
     return beaconRegion;   
 } 
 
+//////////////////////////////iBeacon Start Monitoring/////////////////////
+function startMonitoring() {
+	clearLog();
+	var delegate = new cordova.plugins.locationManager.Delegate();
+	
+	delegate.didDetermineStateForRegion = function (pluginResult) {
+		logToDom(eventCnt+'['+eventCnt+'] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
+		cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
+		eventCnt++;
+	};
 
+	delegate.didStartMonitoringForRegion = function (pluginResult) {
+		logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
+	};
+
+	delegate.didRangeBeaconsInRegion = function (pluginResult) {
+		logToDom('['+eventCnt+'] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
+		eventCnt++;
+	};
+
+	//var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825';
+	//var identifier = 'myiBeacon';
+	//var minor = 10001;
+	//var major = 23366;
+	var beaconRegion = createBeacon();//new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
+
+	cordova.plugins.locationManager.setDelegate(delegate);
+
+	// required in iOS 8+
+	cordova.plugins.locationManager.requestWhenInUseAuthorization(); 
+	// or cordova.plugins.locationManager.requestAlwaysAuthorization()	
+	
+	//Start monitoring a single iBeacon
+	cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
+	.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);} })
+	.done();
+	
+}
+//////////////////////////////iBeacon Stop Monitoring/////////////////////
+function stopMonitoring() {
+	var beaconRegion = createBeacon();
+	
+	//Stop ranging a single iBeacon
+	cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
+	.fail(function(e) { console.error(e); })
+	.done();
+}
+
+//////////////////////////////iBeacon Start Ranging/////////////////////
 function startRanging() {
 	clearLog();
 	var delegate = new cordova.plugins.locationManager.Delegate();
@@ -80,34 +130,23 @@ function startRanging() {
 
 	//Start ranging a single iBeacon
 	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
-		.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message);})
-		.done();
-	
-	//Start monitoring a single iBeacon
-	//cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
-	//.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);} })
-	//.done();
-	
+		.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message,'Error');})
+		.done();	
 }
-
-function stopRanding() {
+//////////////////////////////iBeacon Stop Ranging/////////////////////
+function stopRanging() {
 	var beaconRegion = createBeacon();
 	
 	//Stop ranging a single iBeacon
 	cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
 	.fail(function(e) { console.error(e); })
 	.done();
-	
-	//Stop monitoring a single iBeacon
-	//cordova.plugins.locationManager.stopMonitoringForRegion(beaconRegion)
-	//.fail(function(e) { console.error(e); })
-	//.done();
 }
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
   //  console.log("Device is ready!");
-	cordova.plugins.locationManager.isBluetoothEnabled()
+	 cordova.plugins.locationManager.isBluetoothEnabled()
     .then(function(isEnabled){
      //   console.log("isEnabled: " + isEnabled);	
 		logToDom('[DOM] isBluetoothEnabled: ' + isEnabled);
@@ -122,21 +161,37 @@ $$(document).on('deviceready', function() {
 	
 });
 
-$$('.start .button').on('click', function () {
-   if(isRunning) {
-		stopRanding();
-		isRunning = false;
-		this.innerText = 'Start Monitor';
+$$('.monitor .button').on('click', function () {
+   if(isMonitorRunning) {
+		stopMonitoring();
+		isMonitorRunning = false;
+		this.innerText = 'Start Ranging';
 		this.style.color='blue';
-		myApp.alert("Monitor Stopped!");
+		myApp.alert("Ranging Stopped!",'ShakeZb');
+   }
+   else {
+		startMonitoring(); 		
+		isMonitorRunning = true;		
+		this.innerText = 'Stop Ranging';
+		this.style.color='red';
+   }     
+});
+
+
+$$('.range .button').on('click', function () {
+   if(isRangeRunning) {
+		stopRanging();
+		isRangeRunning = false;
+		this.innerText = 'Start Ranging';
+		this.style.color='blue';
+		myApp.alert("Ranging Stopped!",'ShakeZb');
    }
    else {
 		startRanging(); 		
-		isRunning = true;		
-		this.innerText = 'Stop Monitor';
+		isRangeRunning = true;		
+		this.innerText = 'Stop Ranging';
 		this.style.color='red';
-   }
-     
+   }     
 });
 
 $$('.clear .button').on('click', function () {   
