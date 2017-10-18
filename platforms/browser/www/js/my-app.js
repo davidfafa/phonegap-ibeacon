@@ -38,9 +38,9 @@ var clearLog = function() {
 function createBeacon() {
 //    var uuid = '00000000-0000-0000-0000-000000000000'; // mandatory
 	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825'; // mandatory
-    var identifier = 'beaconAtTheMacBooks'; // mandatory
-    var minor = 10001; // optional, defaults to wildcard if left empty
-    var major = 23366; // optional, defaults to wildcard if left empty
+    var identifier = 'myiBeacon'; // mandatory
+    var minor = ''; // optional, defaults to wildcard if left empty
+    var major = ''; // optional, defaults to wildcard if left empty
 
     // throws an error if the parameters are not valid
     var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
@@ -108,7 +108,18 @@ function startRanging() {
 	};
 
 	delegate.didStartMonitoringForRegion = function (pluginResult) {
-		logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
+		logToDom('['+eventCnt+']didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
+		eventCnt++;
+	};
+	
+	delegate.didEnterRegion = function (pluginResult) {
+		logToDom('['+eventCnt+']didEnterRegion:' + JSON.stringify(pluginResult));
+		eventCnt++;
+	};
+	
+	delegate.didExitRegion = function (pluginResult) {
+		logToDom('['+eventCnt+']didExitRegion:' + JSON.stringify(pluginResult));
+		eventCnt++;
 	};
 
 	delegate.didRangeBeaconsInRegion = function (pluginResult) {
@@ -165,14 +176,14 @@ $$('.monitor .button').on('click', function () {
    if(isMonitorRunning) {
 		stopMonitoring();
 		isMonitorRunning = false;
-		this.innerText = 'Start Ranging';
+		this.innerText = 'Start Monitoring';
 		this.style.color='blue';
-		myApp.alert("Ranging Stopped!",'ShakeZb');
+		myApp.alert("Monitoring Stopped!",'ShakeZb');
    }
    else {
 		startMonitoring(); 		
 		isMonitorRunning = true;		
-		this.innerText = 'Stop Ranging';
+		this.innerText = 'Stop Monitoring';
 		this.style.color='red';
    }     
 });
