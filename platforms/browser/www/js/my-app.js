@@ -14,22 +14,61 @@ var mainView = myApp.addView('.view-main', {
 var eventCnt = 1;
 var isMonitorRunning = false;
 var isRangeRunning = false;
+var notificationID = 0;
+// Dictionary of beacons.
+var beacons = {};
+// Timer that displays list of beacons.
+var updateTimer = null;
 
-
-var logToDom = function (message) {		
-	//var e = document.getElementById('result');	
-	//e.innerText = message;
-	var node = document.createElement("p");                  // Create a <p> node
-	var textnode = document.createTextNode(message);         // Create a text node
-	node.appendChild(textnode);                              // Append the text to <p>	
-	document.getElementById("result").appendChild(node);     // Append <p> to <div> with id="result" 
+var logToDom = function (message) {			
+	//var node = document.createElement("p");                  // Create a <p> node
+	//var textnode = document.createTextNode(message);         // Create a text node
+	//node.appendChild(textnode);                              // Append the text to <p>	
+	//document.getElementById("result").appendChild(node);     // Append <p> to <div> with id="result" 
+	$$("#result").append('<p>'+message+'</p>');
 };	
 
 var clearLog = function() {
-	document.getElementById("result").innerText='';
+	//document.getElementById("result").innerText='';	
+	$$('#result').html('');		
 	eventCnt = 1;
 }
+function displayBeaconList()
+	{
+		// Clear beacon list.
+		$$('#found-beacons').html('');
 
+		var timeNow = Date.now();
+
+		// Update beacon list.
+		$$.each(beacons, function(key, beacon)
+		{
+			// Only show beacons that are updated during the last 60 seconds.
+			if (beacon.timeStamp + 60000 > timeNow)
+			{
+				// Map the RSSI value to a width in percent for the indicator.
+				var rssiWidth = 1; // Used when RSSI is zero or greater.
+				if (beacon.rssi < -100) { rssiWidth = 100; }
+				else if (beacon.rssi < 0) { rssiWidth = 100 + beacon.rssi; }
+
+				// Create tag to display beacon data.
+				var element = $$(
+					'<li>'
+					+	'<strong>UUID: ' + beacon.uuid + '</strong><br />'
+					+	'Major: ' + beacon.major + '<br />'
+					+	'Minor: ' + beacon.minor + '<br />'
+					+	'Proximity: ' + beacon.proximity + '<br />'
+					+	'RSSI: ' + beacon.rssi + '<br />'
+					+ 	'<div style="background:rgb(255,128,64);height:20px;width:'
+					+ 		rssiWidth + '%;"></div>'
+					+ '</li>'
+				);
+
+				//$$('#warning').remove();
+				$$('#found-beacons').append(element);
+			}
+		});
+}
 /**
  * Function that creates a BeaconRegion data transfer object.
  * 
@@ -39,12 +78,12 @@ function createBeacon() {
 //    var uuid = '00000000-0000-0000-0000-000000000000'; // mandatory
 	var uuid = 'FDA50693-A4E2-4FB1-AFCF-C6EB07647825'; // mandatory
     var identifier = 'myiBeacon'; // mandatory
-    var minor = 10001; // optional, defaults to wildcard if left empty
-    var major = 23366; // optional, defaults to wildcard if left empty
+   // var minor = 10001; // optional, defaults to wildcard if left empty
+    //var major = 23366; // optional, defaults to wildcard if left empty
 
     // throws an error if the parameters are not valid
     //var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
-	 var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
+	var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
    
     return beaconRegion;   
 } 
@@ -61,7 +100,7 @@ function startMonitoring() {
 	};
 
 	delegate.didStartMonitoringForRegion = function (pluginResult) {
-		logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
+	//	logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
 	};
 	
 	delegate.didEnterRegion = function (pluginResult) {
@@ -93,8 +132,7 @@ function startMonitoring() {
 	//Start monitoring a single iBeacon
 	cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
 	.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);})
-	.done();
-	
+	.done();	
 }
 //////////////////////////////iBeacon Stop Monitoring/////////////////////
 function stopMonitoring() {
@@ -115,10 +153,21 @@ function startRanging() {
 		logToDom('['+eventCnt+'] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
 		//cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
 		eventCnt++;
+		
+		if (pluginResult.region.typeName == 'BeaconRegion' &&
+					pluginResult.state == 'CLRegionStateInside')
+				{
+					cordova.plugins.notification.local.schedule(
+					{
+						id: ++notificationID,
+						title: 'Beacon in range',
+						text: 'iBeacon Scan detected a beacon, tap here to open app.'
+					});
+		}
 	};
 
 	delegate.didStartMonitoringForRegion = function (pluginResult) {
-		logToDom('['+eventCnt+']didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
+	//	logToDom('['+eventCnt+']didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
 		eventCnt++;
 	};
 	
@@ -135,13 +184,21 @@ function startRanging() {
 	delegate.didRangeBeaconsInRegion = function (pluginResult) {
 		logToDom('['+eventCnt+'] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
 		eventCnt++;
+		for (var i in pluginResult.beacons)
+		{
+			// Insert beacon into table of found beacons.
+			var beacon = pluginResult.beacons[i];
+			beacon.timeStamp = Date.now();
+			var key = beacon.uuid + ':' + beacon.major + ':' + beacon.minor;
+			beacons[key] = beacon;
+		}
 	};
 
-	var uuid = 'FDA50693-A4E2-4FB1-AFCF-C6EB07647825';
-	var identifier = 'myiBeacon';
+	//var uuid = 'FDA50693-A4E2-4FB1-AFCF-C6EB07647825';
+	//var identifier = 'myiBeacon';
 	//var minor = 10001;
 	//var major = 23366;
-	var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
+	var beaconRegion = createBeacon();//new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
 
 	cordova.plugins.locationManager.setDelegate(delegate);
 
@@ -188,6 +245,7 @@ $$('.monitor .button').on('click', function () {
 		isMonitorRunning = false;
 		this.innerText = 'Start Monitoring';
 		this.style.color='blue';
+		clearInterval(updateTimer);
 		myApp.alert("Monitoring Stopped!",'ShakeZb');
    }
    else {
@@ -195,6 +253,8 @@ $$('.monitor .button').on('click', function () {
 		isMonitorRunning = true;		
 		this.innerText = 'Stop Monitoring';
 		this.style.color='red';
+		// Display refresh timer.
+		updateTimer = setInterval(displayBeaconList, 500);
    }     
 });
 
@@ -205,6 +265,7 @@ $$('.range .button').on('click', function () {
 		isRangeRunning = false;
 		this.innerText = 'Start Ranging';
 		this.style.color='blue';
+		clearInterval(updateTimer);
 		myApp.alert("Ranging Stopped!",'ShakeZb');
    }
    else {
@@ -212,6 +273,8 @@ $$('.range .button').on('click', function () {
 		isRangeRunning = true;		
 		this.innerText = 'Stop Ranging';
 		this.style.color='red';
+		// Display refresh timer.
+		updateTimer = setInterval(displayBeaconList, 500);
    }     
 });
 
