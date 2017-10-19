@@ -177,8 +177,8 @@ function startRanging() {
 	};
 
 	delegate.didRangeBeaconsInRegion = function (pluginResult) {
-		//logToDom('['+eventCnt+'] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
-		//eventCnt++;
+		logToDom('['+eventCnt+'] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
+		eventCnt++;
 		for (var i in pluginResult.beacons)
 		{
 			// Insert beacon into table of found beacons.
