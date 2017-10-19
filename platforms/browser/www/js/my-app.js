@@ -20,16 +20,11 @@ var beacons = {};
 // Timer that displays list of beacons.
 var updateTimer = null;
 
-var logToDom = function (message) {			
-	//var node = document.createElement("p");                  // Create a <p> node
-	//var textnode = document.createTextNode(message);         // Create a text node
-	//node.appendChild(textnode);                              // Append the text to <p>	
-	//document.getElementById("result").appendChild(node);     // Append <p> to <div> with id="result" 
+var logToDom = function (message) {				
 	$$("#result").append('<p>'+message+'</p>');
 };	
 
 var clearLog = function() {
-	//document.getElementById("result").innerText='';	
 	$$('#result').html('');		
 	eventCnt = 1;
 }
