@@ -153,8 +153,7 @@ function startRanging() {
 	delegate.didDetermineStateForRegion = function (pluginResult) {
 		logToDom('['+eventCnt+'] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
 		//cordova.plugins.locationManager.appendToDeviceLog('[DOM] didDetermineStateForRegion: ' + JSON.stringify(pluginResult));
-		eventCnt++;
-		
+		eventCnt++;		
 		if (pluginResult.region.typeName == 'BeaconRegion' &&
 					pluginResult.state == 'CLRegionStateInside')
 				{
@@ -183,8 +182,8 @@ function startRanging() {
 	};
 
 	delegate.didRangeBeaconsInRegion = function (pluginResult) {
-		logToDom('['+eventCnt+'] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
-		eventCnt++;
+		//logToDom('['+eventCnt+'] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
+		//eventCnt++;
 		for (var i in pluginResult.beacons)
 		{
 			// Insert beacon into table of found beacons.
