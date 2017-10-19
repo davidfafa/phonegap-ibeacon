@@ -37,7 +37,7 @@ var clearLog = function() {
  */
 function createBeacon() {
 //    var uuid = '00000000-0000-0000-0000-000000000000'; // mandatory
-	var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647828'; // mandatory
+	var uuid = 'FDA50693-A4E2-4FB1-AFCF-C6EB07647825'; // mandatory
     var identifier = 'myiBeacon'; // mandatory
     var minor = 10001; // optional, defaults to wildcard if left empty
     var major = 23366; // optional, defaults to wildcard if left empty
@@ -77,7 +77,7 @@ function startMonitoring() {
 		eventCnt++;
 	};
 
-	//var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825';
+	//var uuid = 'FDA50693-A4E2-4FB1-AFCF-C6EB07647825';
 	//var identifier = 'myiBeacon';
 	//var minor = 10001;
 	//var major = 23366;
@@ -136,11 +136,11 @@ function startRanging() {
 		eventCnt++;
 	};
 
-	//var uuid = 'fda50693-a4e2-4fb1-afcf-c6eb07647825';
-	//var identifier = 'myiBeacon';
-	//var minor = 10001;
-	//var major = 23366;
-	var beaconRegion = createBeacon();//new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
+	var uuid = 'FDA50693-A4E2-4FB1-AFCF-C6EB07647825';
+	var identifier = 'myiBeacon';
+	var minor = 10001;
+	var major = 23366;
+	var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
 
 	cordova.plugins.locationManager.setDelegate(delegate);
 
