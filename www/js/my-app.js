@@ -100,7 +100,7 @@ function startMonitoring() {
 	};
 
 	delegate.didStartMonitoringForRegion = function (pluginResult) {
-	//	logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
+		logToDom('didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
 	};
 	
 	delegate.didEnterRegion = function (pluginResult) {
@@ -138,10 +138,11 @@ function startMonitoring() {
 function stopMonitoring() {
 	var beaconRegion = createBeacon();
 	
-	//Stop ranging a single iBeacon
-	cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
+	//Stop monitoring a single iBeacon	
+	cordova.plugins.locationManager.stopMonitoringForRegion(beaconRegion)
 	.fail(function(e) { console.error(e); })
 	.done();
+	
 }
 
 //////////////////////////////iBeacon Start Ranging/////////////////////
@@ -167,7 +168,7 @@ function startRanging() {
 	};
 
 	delegate.didStartMonitoringForRegion = function (pluginResult) {
-	//	logToDom('['+eventCnt+']didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
+		logToDom('['+eventCnt+']didStartMonitoringForRegion:' + JSON.stringify(pluginResult));
 		eventCnt++;
 	};
 	
@@ -205,7 +206,13 @@ function startRanging() {
 	// required in iOS 8+
 	cordova.plugins.locationManager.requestWhenInUseAuthorization(); 
 	// or cordova.plugins.locationManager.requestAlwaysAuthorization()
-
+	
+	//Start monitoring a single iBeacon
+	cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
+	.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);})
+	.done();
+	
+	
 	//Start ranging a single iBeacon
 	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
 		.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message,'Error');})
@@ -215,7 +222,13 @@ function startRanging() {
 function stopRanging() {
 	var beaconRegion = createBeacon();
 	
-	//Stop ranging a single iBeacon
+	//Stop monitoring a single iBeacon	
+	cordova.plugins.locationManager.stopMonitoringForRegion(beaconRegion)
+	.fail(function(e) { console.error(e); })
+	.done();
+	
+	
+	//Stop ranging a single iBeacon	
 	cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
 	.fail(function(e) { console.error(e); })
 	.done();
