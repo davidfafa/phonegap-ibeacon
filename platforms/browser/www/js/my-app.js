@@ -43,7 +43,8 @@ function createBeacon() {
     var major = 23366; // optional, defaults to wildcard if left empty
 
     // throws an error if the parameters are not valid
-    var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
+    //var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
+	 var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
    
     return beaconRegion;   
 } 
@@ -138,9 +139,9 @@ function startRanging() {
 
 	var uuid = 'FDA50693-A4E2-4FB1-AFCF-C6EB07647825';
 	var identifier = 'myiBeacon';
-	var minor = 10001;
-	var major = 23366;
-	var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
+	//var minor = 10001;
+	//var major = 23366;
+	var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
 
 	cordova.plugins.locationManager.setDelegate(delegate);
 
