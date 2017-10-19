@@ -54,6 +54,8 @@ function displayBeaconList()
 					+	'Minor: ' + beacon.minor + '<br />'
 					+	'Proximity: ' + beacon.proximity + '<br />'
 					+	'RSSI: ' + beacon.rssi + '<br />'
+					+	'TX: ' + beacon.tx + '<br />'
+					+	'Accuracy: ' + beacon.accuracy + '<br />'
 					+ 	'<div style="background:rgb(255,128,64);height:20px;width:'
 					+ 		rssiWidth + '%;"></div>'
 					+ '</li>'
@@ -84,6 +86,7 @@ function createBeacon() {
 } 
 
 //////////////////////////////iBeacon Start Monitoring/////////////////////
+//not used
 function startMonitoring() {
 	clearLog();
 	var delegate = new cordova.plugins.locationManager.Delegate();
@@ -130,6 +133,7 @@ function startMonitoring() {
 	.done();	
 }
 //////////////////////////////iBeacon Stop Monitoring/////////////////////
+//not used
 function stopMonitoring() {
 	var beaconRegion = createBeacon();
 	
@@ -177,7 +181,7 @@ function startRanging() {
 	};
 
 	delegate.didRangeBeaconsInRegion = function (pluginResult) {
-		logToDom('['+eventCnt+'] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
+	//	logToDom('['+eventCnt+'] didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult));
 		eventCnt++;
 		for (var i in pluginResult.beacons)
 		{
