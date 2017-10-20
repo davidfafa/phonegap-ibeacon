@@ -220,7 +220,7 @@ function startRanging() {
 	// or cordova.plugins.locationManager.requestAlwaysAuthorization()
 	
 	// Start monitoring and ranging beacons.
-	for (var i in regions)
+	/*for (var i in regions)
 	{
 		var beaconRegion = new locationManager.BeaconRegion(
 			i + 1,
@@ -236,8 +236,11 @@ function startRanging() {
 		locationManager.startMonitoringForRegion(beaconRegion)
 			.fail(console.error)
 			.done();
-	}
-/*
+	}*/
+	var beaconRegion = new locationManager.BeaconRegion(
+			1,
+			regions[0].uuid);
+			
 	//Start monitoring a single iBeacon
 	cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
 	.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);})
@@ -247,7 +250,7 @@ function startRanging() {
 	//Start ranging a single iBeacon
 	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
 		.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message,'Error');})
-		.done();	*/
+		.done();	
 }
 //////////////////////////////iBeacon Stop Ranging/////////////////////
 function stopRanging() {
