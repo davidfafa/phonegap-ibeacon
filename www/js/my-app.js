@@ -19,19 +19,18 @@ var notificationID = 0;
 var beacons = {};
 // Timer that displays list of beacons.
 var updateTimer = null;
-
 // Specify your beacon 128bit UUIDs here.
 var regions =
 	[
 		// Estimote Beacon factory UUID.
 		//{uuid:'B9407F30-F5F8-466E-AFF9-25556B57FE6D'},
 		// Sample UUIDs for beacons in our lab.
-		{uuid:'FDA50693-A4E2-4FB1-AFCF-C6EB07647825'}
-	//	{uuid:'8DEEFBB9-F738-4297-8040-96668BB44281'},
-	//	{uuid:'A0B13730-3A9A-11E3-AA6E-0800200C9A66'},
-	//	{uuid:'E20A39F4-73F5-4BC4-A12F-17D1AD07A961'},
-	//	{uuid:'A4950001-C5B1-4B44-B512-1370F02D74DE'},
-	//	{uuid:'585CDE93-1B01-42CC-9A13-25009BEDC65E'}
+		{uuid:'FDA50693-A4E2-4FB1-AFCF-C6EB07647825'},
+		{uuid:'8DEEFBB9-F738-4297-8040-96668BB44281'},
+		{uuid:'A0B13730-3A9A-11E3-AA6E-0800200C9A66'},
+		{uuid:'E20A39F4-73F5-4BC4-A12F-17D1AD07A961'},
+		{uuid:'A4950001-C5B1-4B44-B512-1370F02D74DE'},
+		{uuid:'585CDE93-1B01-42CC-9A13-25009BEDC65E'}
 ];
 
 var logToDom = function (message) {				
@@ -212,7 +211,7 @@ function startRanging() {
 	//var identifier = 'myiBeacon';
 	//var minor = 10001;
 	//var major = 23366;
-	//var beaconRegion = createBeacon();//new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
+	var beaconRegion = createBeacon();//new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
 
 	cordova.plugins.locationManager.setDelegate(delegate);
 
@@ -220,7 +219,6 @@ function startRanging() {
 	cordova.plugins.locationManager.requestWhenInUseAuthorization(); 
 	// or cordova.plugins.locationManager.requestAlwaysAuthorization()
 	
-	/*
 	//Start monitoring a single iBeacon
 	cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
 	.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);})
@@ -230,47 +228,10 @@ function startRanging() {
 	//Start ranging a single iBeacon
 	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
 		.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message,'Error');})
-		.done();*/
-	
-		for (var i in regions)
-		{
-			var beaconRegion = new locationManager.BeaconRegion(
-				i + 1,
-				regions[i].uuid);
-
-			//Start monitoring a single iBeacon
-			cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
-			.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);})
-			.done();
-			
-			
-			//Start ranging a single iBeacon
-			cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
-				.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message,'Error');})
-			.done();
-		}		
+		.done();	
 }
 //////////////////////////////iBeacon Stop Ranging/////////////////////
 function stopRanging() {
-	for (var i in regions)
-	{
-		var beaconRegion = new locationManager.BeaconRegion(
-			i + 1,
-			regions[i].uuid);
-
-		//Stop monitoring a single iBeacon	
-		cordova.plugins.locationManager.stopMonitoringForRegion(beaconRegion)
-		.fail(function(e) { console.error(e); })
-		.done();
-		
-		
-		//Stop ranging a single iBeacon	
-		cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
-		.fail(function(e) { console.error(e); })
-		.done();
-	}
-		
-	/*	
 	var beaconRegion = createBeacon();
 	
 	//Stop monitoring a single iBeacon	
@@ -282,7 +243,7 @@ function stopRanging() {
 	//Stop ranging a single iBeacon	
 	cordova.plugins.locationManager.stopRangingBeaconsInRegion(beaconRegion)
 	.fail(function(e) { console.error(e); })
-	.done();*/
+	.done();
 }
 
 // Handle Cordova Device Ready Event
