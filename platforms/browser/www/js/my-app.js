@@ -93,7 +93,8 @@ function createBeacon() {
 
     // throws an error if the parameters are not valid
     //var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid, major, minor);
-	var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
+	//var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
+	var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(identifier);
    
     return beaconRegion;   
 } 
@@ -211,7 +212,7 @@ function startRanging() {
 	//var identifier = 'myiBeacon';
 	//var minor = 10001;
 	//var major = 23366;
-	//var beaconRegion = createBeacon();//new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
+	var beaconRegion = createBeacon();//new cordova.plugins.locationManager.BeaconRegion(identifier, uuid);
 
 	cordova.plugins.locationManager.setDelegate(delegate);
 
@@ -219,7 +220,7 @@ function startRanging() {
 	cordova.plugins.locationManager.requestWhenInUseAuthorization(); 
 	// or cordova.plugins.locationManager.requestAlwaysAuthorization()
 	
-	// Start monitoring and ranging beacons.
+		/*
 	for (var i in regions)
 	{
 		var beaconRegion = new cordova.plugins.locationManager.BeaconRegion(
@@ -236,8 +237,8 @@ function startRanging() {
 		cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
 			.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message,'Error');})
 			.done();
-	}
-/*
+	}*/
+
 	//Start monitoring a single iBeacon
 	cordova.plugins.locationManager.startMonitoringForRegion(beaconRegion)
 	.fail(function(e) { console.error(e);logToDom('startMonitoringForRegion fail:' + e.message);myApp.alert(e.message);})
@@ -247,7 +248,7 @@ function startRanging() {
 	//Start ranging a single iBeacon
 	cordova.plugins.locationManager.startRangingBeaconsInRegion(beaconRegion)
 		.fail(function(e) { console.error(e);logToDom('startRangingBeaconsInRegion fail:' + e.message);myApp.alert(e.message,'Error');})
-		.done();	*/
+		.done();	
 }
 //////////////////////////////iBeacon Stop Ranging/////////////////////
 function stopRanging() {
