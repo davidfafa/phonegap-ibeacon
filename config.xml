@@ -25,9 +25,9 @@
         <preference name="BackupWebStorage" value="none" />
     </platform>
     <preference name="DisallowOverscroll" value="true" />
-    <plugin name="cordova-plugin-whitelist" spec="~1.2.0" />
+    <!--plugin name="cordova-plugin-whitelist" spec="~1.2.0" />
     <plugin name="cordova-plugin-console" spec="~1.0.1" />
-    <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
+    <plugin name="cordova-plugin-statusbar" spec="~1.0.1" /-->
 	<plugin name="cordova-plugin-ibeacon" />
 	<plugin name="cordova-plugin-local-notification" />
 	<!--plugin name="com.unarin.cordova.beacon" spec="3.2.1" source="pgb" /-->
