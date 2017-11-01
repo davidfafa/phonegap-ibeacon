@@ -1,5 +1,25 @@
+// Code for platform detection
+var isMaterial = Framework7.prototype.device.ios === false;
+var isIos = Framework7.prototype.device.ios === true;
+
+// Add the above as global variables for templates
+Template7.global = {
+  material: isMaterial,
+  ios: isIos,
+};
+
+
 // Initialize app
-var myApp = new Framework7();
+var myApp = new Framework7({
+  material: isIos? false : true,
+  template7Pages: true,
+  precompileTemplates: true,
+  swipePanel: 'left',
+  swipePanelActiveArea: '30',
+  swipeBackPage: true,
+  animateNavBackIcon: true,
+  pushState: !!Framework7.prototype.device.os,	
+});
 
 
 // If we need to use custom DOM library, let's save it to $$ variable:
